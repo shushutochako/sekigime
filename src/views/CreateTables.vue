@@ -1,38 +1,48 @@
 <template>
   <div class="create-tables">
     <div class="table-setting">
-        <input type="text" tabindex="1" class="table-setting-item" name="numberOfPersons" id="number-of-persons" v-model="numberOfPersons"/>
-        <input type="text" tabindex="2" class="table-setting-item" name="numberOfPerTable" id="number-of-per-table"/>
+        <input type="number" tabindex="1" class="table-setting-item" name="numberOfPerTable" id="number-of-per-table" v-model="numberOfPerTables"/>
+    </div>
+    <div class="person-area">
+      <div class="input-area">
+        <input type="text" tabindex="1" name="person-name" id="person-name" v-model="personName">
+        <button @click="onAdd">add!</button>
+      </div>
+      <div v-for="(person, i) in getPersons()" :key="i">{{person.name}}</div>
     </div>
     <div class="table-container">
       <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
     </div>
-    <button @click="onClick">Click!</button>
+    <button @click="onShuffle">席を決める</button>
   </div>
 </template>
 
 <script lang="ts">
 import { mapGetters, mapMutations, createNamespacedHelpers } from 'vuex'
-import { Mutation } from 'vuex-class'
+import { Mutation, Getter } from 'vuex-class'
 import { Component, Prop, Vue } from "vue-property-decorator";
 import MyTable from "@/components/Table.vue";
 import TableEntity from "@/entity/Table.ts";
 import Person from "@/entity/Person";
+import Table from '@/components/Table.vue';
 
 @Component({
   components: {
     MyTable
   },
   methods: {
-    ...mapMutations('tableSetting',['updateNumberOfPersons'])
+    // ...mapMutations('TableSetting',['updateNumberOfPersons'])
   }
 })
 export default class Createtable extends Vue {
   private tables: Array<TableEntity> = [];
-  @Mutation('tableSetting/updateNumberOfPersons') updateNumberOfPersons!: (newValue:number) => void
+  private personName: string = "";
+  @Mutation('TableSetting/updateNumberOfPerTables') updateNumberOfPerTables!: (newValue:number) => void
+  @Mutation('Persons/add') addPerson!: (newPerson:any) => void
+  @Getter('Persons/getPersons') getPersons!: () => [any]
+  @Getter('TableSetting/getNumberOfPerTables') getNumberOfPerTables!: () => number
 
   mounted(): void {
-    console.log("mounted");
     this.dummy();
   }
 
@@ -53,18 +63,71 @@ export default class Createtable extends Vue {
     ];
   }
 
-  get numberOfPersons(): boolean {
-    return this.$store.state.numberOfPersons;
+  get numberOfPerTables(): number {
+    return this.getNumberOfPerTables();
   }
 
-  set numberOfPersons(value) {
-    this.updateNumberOfPersons(Number(value));
-    
+  set numberOfPerTables(value) {
+    this.updateNumberOfPerTables(Number(value));
   }
 
   onClick(): void {
-    this.tables[0].members[0].name = "hit";
+    console.log(this.getNumberOfPerTables())
   }
+
+  onAdd(): void {
+    this.addPerson({
+      name: this.personName
+    })
+  }
+
+  private onShuffle(): void {
+    this.createTables();
+  }
+
+  createTables(): void {
+    const perTable = this.getNumberOfPerTables();
+    const members: Array<Person> = this.getPersons().concat();
+    const personCount = members.length;
+    const tableCount =  Math.floor(personCount / perTable);
+
+    const tables = Array<TableEntity>();
+    tableLoop : for (let i = 0; i < tableCount; i++ ) {
+      const persons = Array<Person>();
+      for (let j = 0; j < perTable; j++) {
+        if (members.length < 1) {
+          break tableLoop;
+        }
+        const rand = Math.floor(Math.random() * (members.length));
+        persons.push(members.splice(rand, 1)[0]);
+      }
+
+      tables.push(new TableEntity(`テーブル${i + 1}`, persons));
+    }
+    const adjustment = this.assignSurplus(tables, members);
+    this.tables = adjustment;
+  }
+
+  // 余りメンバーの割り当て
+  assignSurplus(tables: Array<TableEntity>, members: Array<Person>): Array<TableEntity> {
+    const surplus = members.length;
+
+    const assigns: Array<number> = [];
+    const lottery = (max: number): number => {
+      const rand = Math.floor(Math.random() * max);
+      if (assigns.includes(rand)) {
+        return lottery(max);
+      }
+      assigns.push(rand);
+      return rand;
+    };
+    for (let i = 0; i < surplus; i++ ) {
+      const select = lottery(surplus);
+      tables[select].members.push(members.splice(0,1)[0]);
+    }
+    return tables;
+  }
+
 }
 </script>
 
@@ -75,6 +138,19 @@ export default class Createtable extends Vue {
   display: flex;
   -webkit-flex-direction: column; /* Safari */
   flex-direction: column;
+}
+.person-area {
+  margin: 10px;
+  min-height:200px;
+  background: lightgray;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column; /* Safari */
+  flex-direction: column;
+}
+.person-area .input-area{
+  display: -webkit-flex;
+  justify-content: flex-end;
 }
 .table-setting-item {
   width: 300px;
