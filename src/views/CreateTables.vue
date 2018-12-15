@@ -16,9 +16,15 @@
             v-model="personName"
           ></el-input>
         </el-form-item>
-        <el-button @click="onAdd">追加</el-button>
-        <div v-for="(person, i) in getPersons()" :key="i">{{person.name}}</div>
+        <i class="el-icon-circle-plus" @click="onAdd"></i>
       </el-form>
+      <person-list-item
+        v-for="(person, i) in getPersons()"
+        :person="person"
+        :showRemove="true"
+        :index=i
+        :key="i"
+      />
     </el-aside>
     <el-container>
       <el-main>
@@ -39,10 +45,12 @@ import MyTable from "@/components/Table.vue";
 import TableEntity from "@/entity/Table.ts";
 import Person from "@/entity/Person";
 import Table from "@/components/Table.vue";
+import PersonListItem from "@/components/PersonListItem.vue";
 
 @Component({
   components: {
-    MyTable
+    MyTable,
+    PersonListItem
   },
   methods: {
     // ...mapMutations('TableSetting',['updateNumberOfPersons'])
@@ -64,20 +72,7 @@ export default class Createtable extends Vue {
   }
 
   dummy(): void {
-    this.tables = [
-      new TableEntity("table1", [
-        new Person("Person A"),
-        new Person("Person B")
-      ]),
-      new TableEntity("table2", [
-        new Person("Person C"),
-        new Person("Person D")
-      ]),
-      new TableEntity("table3", [
-        new Person("Person E"),
-        new Person("Person F")
-      ])
-    ];
+    this.tables = [];
   }
 
   get numberOfPerTables(): number {

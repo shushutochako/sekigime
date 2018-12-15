@@ -4,17 +4,23 @@
         {{ table.name }}
       </div>
       <div class="member-container">
-        <p v-for="member in table.members" :key="member">
+        <!-- <p v-for="member in table.members" :key="member">
           {{member.name}}
-        </p>
+        </p> -->
+        <person-list-item v-for="(member, i) in table.members" :person="member" :showRemove="false" :key="i"/>
       </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PersonListItem from "@/components/PersonListItem.vue";
 
-@Component
+@Component({
+  components: {
+    PersonListItem
+  }
+})
 export default class Table extends Vue {
   @Prop() public table!: any;
   mounted(): void {

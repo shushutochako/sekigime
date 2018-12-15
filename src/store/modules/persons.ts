@@ -7,9 +7,9 @@ export const Persons = {
     add (state: any, newPerson: any) {
       state.persons.push(newPerson);
     },
-    remove (state: any, newValue: number) {
-      // TODO:
-      // state.numberOfPerTables = newValue;
+    remove (state: any, index: number) {
+      console.log("removeremoveremoveremove")
+      state.persons.splice(index,1);
     }
   },
   actions: {
