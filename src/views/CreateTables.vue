@@ -21,7 +21,7 @@
       <person-list-item
         v-for="(person, i) in getPersons()"
         :person="person"
-        :showRemove="true"
+        :showRemove=true
         :index=i
         :key="i"
       />

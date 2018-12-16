@@ -15,10 +15,11 @@ import { Mutation } from "vuex-class";
 export default class PersonListItem extends Vue {
   @Mutation("Persons/remove") removePerson!: (index: number) => void;
   @Prop() public person!: any;
-  @Prop() public showRemove: boolean = false;
-  @Prop() public index: number = 0;
+  @Prop() public showRemove!: boolean;
+  @Prop() public index!: number;
 
   mounted(): void {
+    console.log(`showRemove:${this.showRemove}`);
     console.log("aaaaaaaaaaaaaaa");
   }
 
