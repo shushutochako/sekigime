@@ -218,6 +218,7 @@ export default class Createtable extends Vue {
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 .header-text {
   font-size: 2em;
