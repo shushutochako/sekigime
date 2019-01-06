@@ -18,13 +18,7 @@ export default class PersonListItem extends Vue {
   @Prop() public showRemove!: boolean;
   @Prop() public index!: number;
 
-  mounted(): void {
-    console.log(`showRemove:${this.showRemove}`);
-    console.log("aaaaaaaaaaaaaaa");
-  }
-
   onRemove(): void {
-    console.log("adsfasfsdfsssffsffasffafffd")
     this.removePerson(this.index);
   }
 }

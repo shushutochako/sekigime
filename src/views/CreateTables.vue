@@ -1,30 +1,48 @@
 <template>
-  <el-container style="height: 500px; border: 1px solid #eee">
+  <el-container style="height: 700px; border: 1px solid #eee">
     <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
-      <el-form :inline="true" :model="sizeForm" size="mini">
-        <el-form-item label="1チームの人数：">
-          <el-input type="number" tabindex="1" id="number-of-per-table" v-model="numberOfPerTables"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form :inline="true">
-        <el-form-item label="名前：">
-          <el-input
-            type="text"
+      <el-menu>
+        <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
+          <label class="label">一人あたりの人数</label>
+          <el-input-number
+            class="input"
             tabindex="1"
-            name="person-name"
-            id="person-name"
-            v-model="personName"
-          ></el-input>
-        </el-form-item>
-        <i class="el-icon-circle-plus" @click="onAdd"></i>
-      </el-form>
-      <person-list-item
-        v-for="(person, i) in getPersons()"
-        :person="person"
-        :showRemove=true
-        :index=i
-        :key="i"
-      />
+            :min="1"
+            :max="50"
+            id="number-of-per-table"
+            v-model="numberOfPerTables"
+          ></el-input-number>
+        </el-form>
+        <br>
+        <br>
+        <el-submenu index="1">
+          <template slot="title"><b>参加メンバー</b></template>
+          <el-form class="input-container" :inline="true">
+            <el-input
+              placeholder="名前を入力してください"
+              type="text"
+              tabindex="1"
+              name="person-name"
+              id="person-name"
+              v-model="personName"
+            >
+              <el-button slot="append" @click="onAdd">
+                追加
+              </el-button>
+            </el-input>
+          </el-form>
+          <div>
+            <person-list-item
+              v-for="(person, i) in getPersons()"
+              :person="person"
+              :showRemove="true"
+              :index="i"
+              :key="i"
+              class="person-list-container"
+            />
+          </div>
+        </el-submenu>
+      </el-menu>
     </el-aside>
     <el-container>
       <el-main>
@@ -88,6 +106,10 @@ export default class Createtable extends Vue {
   }
 
   onAdd(): void {
+    if (this.personName === "" || this.personName === null) {
+      return;
+    }
+    console.log("onAdd");
     this.addPerson({
       name: this.personName
     });
@@ -176,6 +198,18 @@ export default class Createtable extends Vue {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+.person-list-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.input-container {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
 

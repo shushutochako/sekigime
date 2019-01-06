@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <h1>席極め</h1>
+      <h2>席極め</h2>
     </div>
     <router-view/>
   </div>
@@ -25,10 +25,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 #nav {
-  padding: 30px;
+  padding: 4px;
 }
 </style>
