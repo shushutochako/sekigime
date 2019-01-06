@@ -120,7 +120,7 @@ export default class Createtable extends Vue {
       for (var i = 0; i < bin.length; i++) {
         buffer[i] = bin.charCodeAt(i);
       }
-      const blob = new Blob([buffer.buffer]);
+      const blob = new Blob([buffer]);
       const fileName = "table.png";
 
       if (window.navigator.msSaveBlob) {
