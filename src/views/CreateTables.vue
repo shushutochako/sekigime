@@ -9,7 +9,7 @@
     <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
       <el-menu>
         <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
-          <label class="label"><b>一人あたりの人数</b></label>
+          <label class="label"><b>1チームあたりの人数</b></label>
           <el-input-number
             class="input"
             tabindex="1"
