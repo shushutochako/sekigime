@@ -1,8 +1,8 @@
 <template>
   <el-card class="box-card person-item">
-    <div class="text item">
+    <div>
       {{person.name}}
-      <el-button icon="el-icon-circle-close" v-if="showRemove" @click="onRemove" style="float: right; padding: 3px 0" type="text"></el-button>
+      <el-button class="button" icon="el-icon-circle-close-outline" v-if="showRemove" @click="onRemove" style="float: right; padding: 3px 0" type="text"></el-button>
     </div>
   </el-card>
 </template>
@@ -28,7 +28,13 @@ export default class PersonListItem extends Vue {
 <style scoped>
 
 .person-item {
-  background: #EBE8BB;
+  background: #FDBC84;
   margin: 6px;
+}
+.button {
+  color: gray;
+}
+.text {
+  color: brown;
 }
 </style>

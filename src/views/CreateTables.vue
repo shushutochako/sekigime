@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 700px; border: 1px solid #eee">
+  <el-container class="container">
     <el-header class="header">
       <span class="header-text">
         <b>席極め</b>
@@ -175,6 +175,11 @@ export default class Createtable extends Vue {
 </script>
 
 <style scoped>
+
+.container {
+  height: 100%; 
+  border: 1px solid #eee
+}
 .table-setting {
   margin: 10px;
   display: -webkit-flex;
@@ -222,11 +227,11 @@ export default class Createtable extends Vue {
 }
 .header-text {
   font-size: 2em;
-  color: white;
+  color: lightgray;
 }
 .header {
   line-height: 64px;
-  background: #455c7b;
+  background: #3D455A;
 }
 </style>
 

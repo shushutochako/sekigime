@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title-container">
-      <span class="table-name">{{ table.name }}</span>
+      <span class="table-name"><b>{{ table.name }}</b></span>
     </div>
     <div class="member-container">
       <draggable v-model="table.members" :options="{group:'tableMember'}" @start="drag=true" @end="drag=false">
@@ -39,7 +39,7 @@ export default class Table extends Vue {
 <style scoped>
 .container {
   margin: 10px;
-  background: #d94b5e;
+  background: #FBE9AB;
   width: 300px;
   min-height: 300px;
   display: -webkit-flex;
@@ -58,7 +58,7 @@ export default class Table extends Vue {
 }
 
 .table-name {
-  color: white;
+  color: gray;
   margin-left: 10px;
 }
 </style>
