@@ -6,58 +6,63 @@
       </span>
     </el-header>
     <el-container>
-    <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
-      <el-menu>
-        <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
-          <label class="label"><b>1チームあたりの人数</b></label>
-          <el-input-number
-            class="input"
-            tabindex="1"
-            :min="1"
-            :max="50"
-            id="number-of-per-table"
-            v-model="numberOfPerTables"
-          ></el-input-number>
-        </el-form>
-        <br>
-        <br>
-        <el-submenu index="1">
-          <template slot="title">
-            <b>参加メンバー</b>
-          </template>
-          <el-form class="input-container" :inline="true">
-            <el-input
-              placeholder="名前を入力してください"
-              type="text"
+      <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
+        <el-menu>
+          <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
+            <label class="label">
+              <b>1テーブルあたりの人数</b>
+            </label>
+            <el-input-number
+              class="input"
               tabindex="1"
-              name="person-name"
-              id="person-name"
-              v-model="personName"
-            >
-              <el-button slot="append" @click="onAdd">追加</el-button>
-            </el-input>
+              :min="1"
+              :max="50"
+              id="number-of-per-table"
+              v-model="numberOfPerTables"
+            ></el-input-number>
           </el-form>
-          <div>
-            <person-list-item
-              v-for="(person, i) in getPersons()"
-              :person="person"
-              :showRemove="true"
-              :index="i"
-              :key="i"
-              class="person-list-container"
-            />
+          <br>
+          <br>
+          <el-submenu index="1">
+            <template slot="title">
+              <b>参加メンバー</b>
+            </template>
+            <el-form class="input-container" :inline="true">
+              <el-input
+                placeholder="名前を入力してください"
+                type="text"
+                tabindex="1"
+                name="person-name"
+                id="person-name"
+                v-model="personName"
+              >
+                <el-button slot="append" @click="onAdd">追加</el-button>
+              </el-input>
+            </el-form>
+            <div>
+              <person-list-item
+                v-for="(person, i) in getPersons()"
+                :person="person"
+                :showRemove="true"
+                :index="i"
+                :key="i"
+                class="person-list-container"
+              />
+            </div>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-container>
+        <el-main>
+          <el-button @click="onShuffle">席を決める</el-button>
+          <span class="download-button-area">
+            <el-button @click="download">席表をダウンロード</el-button>
+          </span>
+          <div id="table-container" class="table-container">
+            <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
           </div>
-        </el-submenu>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-main>
-        <el-button @click="onShuffle">席を決める</el-button>
-        <div class="table-container">
-          <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
-        </div>
-      </el-main>
-    </el-container>
+        </el-main>
+      </el-container>
     </el-container>
   </el-container>
 </template>
@@ -71,6 +76,7 @@ import TableEntity from "@/entity/Table.ts";
 import Person from "@/entity/Person";
 import Table from "@/components/Table.vue";
 import PersonListItem from "@/components/PersonListItem.vue";
+import html2canvas from "html2canvas";
 
 @Component({
   components: {
@@ -100,6 +106,35 @@ export default class Createtable extends Vue {
     this.tables = [];
   }
 
+  download(): void {
+    if (this.tables.length < 1) {
+      this.$alert("席表を作成してください。", "", {
+        confirmButtonText: "閉じる",
+      });
+      return;
+    }
+    html2canvas(document.getElementById("table-container")!).then(canvas => {
+      const dataurl = canvas.toDataURL();
+      const bin = atob(dataurl.split(",")[1]);
+      const buffer = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) {
+        buffer[i] = bin.charCodeAt(i);
+      }
+      const blob = new Blob([buffer.buffer]);
+      const fileName = "table.png";
+
+      if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(blob, fileName);
+        window.navigator.msSaveOrOpenBlob(blob, fileName);
+      } else {
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+      }
+    });
+  }
+
   get numberOfPerTables(): number {
     return this.getNumberOfPerTables();
   }
@@ -116,7 +151,6 @@ export default class Createtable extends Vue {
     if (this.personName === "" || this.personName === null) {
       return;
     }
-    console.log("onAdd");
     this.addPerson({
       name: this.personName
     });
@@ -175,10 +209,9 @@ export default class Createtable extends Vue {
 </script>
 
 <style scoped>
-
 .container {
-  height: 100%; 
-  border: 1px solid #eee
+  height: 100%;
+  border: 1px solid #eee;
 }
 .table-setting {
   margin: 10px;
@@ -231,7 +264,10 @@ export default class Createtable extends Vue {
 }
 .header {
   line-height: 64px;
-  background: #3D455A;
+  background: #3d455a;
+}
+.download-button-area {
+  margin-left: 20px;
 }
 </style>
 
