@@ -1,9 +1,15 @@
 <template>
   <el-container style="height: 700px; border: 1px solid #eee">
+    <el-header class="header">
+      <span class="header-text">
+        <b>席極め</b>
+      </span>
+    </el-header>
+    <el-container>
     <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
       <el-menu>
         <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
-          <label class="label">一人あたりの人数</label>
+          <label class="label"><b>一人あたりの人数</b></label>
           <el-input-number
             class="input"
             tabindex="1"
@@ -16,7 +22,9 @@
         <br>
         <br>
         <el-submenu index="1">
-          <template slot="title"><b>参加メンバー</b></template>
+          <template slot="title">
+            <b>参加メンバー</b>
+          </template>
           <el-form class="input-container" :inline="true">
             <el-input
               placeholder="名前を入力してください"
@@ -26,9 +34,7 @@
               id="person-name"
               v-model="personName"
             >
-              <el-button slot="append" @click="onAdd">
-                追加
-              </el-button>
+              <el-button slot="append" @click="onAdd">追加</el-button>
             </el-input>
           </el-form>
           <div>
@@ -46,11 +52,12 @@
     </el-aside>
     <el-container>
       <el-main>
+        <el-button @click="onShuffle">席を決める</el-button>
         <div class="table-container">
           <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
         </div>
-        <button @click="onShuffle">席を決める</button>
       </el-main>
+    </el-container>
     </el-container>
   </el-container>
 </template>
@@ -188,11 +195,6 @@ export default class Createtable extends Vue {
   display: -webkit-flex;
   justify-content: flex-end;
 }
-.table-setting-item {
-  width: 300px;
-  height: 30px;
-  margin: 4px;
-}
 .table-container {
   margin-top: 30px;
   display: flex;
@@ -206,10 +208,24 @@ export default class Createtable extends Vue {
   margin-right: 20px;
 }
 
+.label {
+  font-size: 14px;
+}
+.input {
+  margin-top: 8px;
+}
 .input-container {
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
+}
+.header-text {
+  font-size: 2em;
+  color: white;
+}
+.header {
+  line-height: 64px;
+  background: #455c7b;
 }
 </style>
 

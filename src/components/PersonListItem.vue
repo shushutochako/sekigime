@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card person-item">
     <div class="text item">
       {{person.name}}
       <el-button icon="el-icon-circle-close" v-if="showRemove" @click="onRemove" style="float: right; padding: 3px 0" type="text"></el-button>
@@ -26,4 +26,9 @@ export default class PersonListItem extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.person-item {
+  background: #EBE8BB;
+  margin: 6px;
+}
 </style>
