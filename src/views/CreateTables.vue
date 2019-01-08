@@ -1,16 +1,16 @@
 <template>
   <el-container class="container">
-    <el-header class="header">
+    <el-header class="header" height="80px">
       <span class="header-text">
-        <b>席極め</b>
+          <img class="header-logo" height="64px" alt="Header logo" src="../assets/header_logo.png">
       </span>
     </el-header>
-    <el-container>
+    <el-container class="main">
       <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
         <el-menu>
           <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
             <label class="label">
-              <b>1テーブルあたりの人数</b>
+              <b>1チームあたりの人数</b>
             </label>
             <el-input-number
               class="input"
@@ -25,7 +25,7 @@
           <br>
           <el-submenu index="1">
             <template slot="title">
-              <b>参加メンバー</b>
+              <b>参加メンバー （{{this.numberOfMembers}}人）</b>
             </template>
             <el-form class="input-container" :inline="true">
               <el-input
@@ -54,9 +54,9 @@
       </el-aside>
       <el-container>
         <el-main>
-          <el-button @click="onShuffle">席を決める</el-button>
+          <el-button @click="onShuffle">チームを決める</el-button>
           <span class="download-button-area">
-            <el-button @click="download">席表をダウンロード</el-button>
+            <el-button @click="download">チーム表をダウンロード</el-button>
           </span>
           <div id="table-container" class="table-container">
             <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
@@ -108,7 +108,7 @@ export default class Createtable extends Vue {
 
   download(): void {
     if (this.tables.length < 1) {
-      this.$alert("席表を作成してください。", "", {
+      this.$alert("チーム表を作成してください。", "", {
         confirmButtonText: "閉じる",
       });
       return;
@@ -137,6 +137,10 @@ export default class Createtable extends Vue {
 
   get numberOfPerTables(): number {
     return this.getNumberOfPerTables();
+  }
+
+  get numberOfMembers(): number {
+    return this.getPersons().length;
   }
 
   set numberOfPerTables(value) {
@@ -177,7 +181,7 @@ export default class Createtable extends Vue {
         persons.push(members.splice(rand, 1)[0]);
       }
 
-      tables.push(new TableEntity(`テーブル${i + 1}`, persons));
+      tables.push(new TableEntity(`チーム${i + 1}`, persons));
     }
     const adjustment = this.assignSurplus(tables, members);
     this.tables = adjustment;
@@ -212,6 +216,9 @@ export default class Createtable extends Vue {
 .container {
   height: 100%;
   border: 1px solid #eee;
+}
+.main {
+  margin-top: 20px;
 }
 .table-setting {
   margin: 10px;
@@ -263,8 +270,13 @@ export default class Createtable extends Vue {
   color: lightgray;
 }
 .header {
-  line-height: 64px;
+  height: 80px;
+  line-height: 80px;
   background: #3d455a;
+}
+.header-logo {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 .download-button-area {
   margin-left: 20px;
