@@ -2,10 +2,14 @@ export const Project = {
   namespaced: true,
   state: {
     name: "",
+    editId: "",
+    referenceId: ""
   },
   mutations: {
-    updateName (state: any, newName: string) {
-      state.name = newName;
+    create (state: any, newProject: any) {
+      state.name = newProject.name;
+      state.editId = newProject.editId;
+      state.referenceId = newProject.referenceId;
     },
   },
   actions: {
@@ -14,5 +18,11 @@ export const Project = {
     getName: (state:any, getters:any) => () => {
       return state.name;
     },
+    getEditId: (state:any, getters:any) => () => {
+      return state.editId;
+    },
+    getReferenceId: (state:any, getters:any) => () => {
+      return state.referenceId;
+    }
   }
 }

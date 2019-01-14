@@ -22,6 +22,8 @@ import { Mutation, Getter } from "vuex-class";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ProjectEntity from "@/entity/Project.ts";
 import CommonHeader from "@/components/CommonHeader.vue";
+import Config from "@/config/Config.ts";
+import axios from "axios";
 
 @Component({
   components: {
@@ -35,9 +37,10 @@ export default class Createtable extends Vue {
   private labelPosition: string = "left";
   private projectName: string = "";
 
-  @Mutation("Project/updateName") updateName!: (newName: string) => void;
+  @Mutation("Project/create") create!: (newProject: any) => void;
 
   onCreate(): void {
+    const config = new Config();
     (async () => {
       await this.$confirm(
         "プロジェクトを作成します。よろしいですか？",
@@ -49,10 +52,18 @@ export default class Createtable extends Vue {
         }
       );
 
-      this.updateName(this.projectName);
+      const response = await axios.post(`${config.API_URL_BASE}/projects`, {
+        name: this.projectName
+      });
+      this.create({
+        name: response.data.name, 
+        editId: response.data.editId, 
+        referenceId: response.data.referenceId
+      });
       this.$router.push({ path: "createTeams" });
-
-    })().catch(e => {});
+    })().catch(e => {
+      console.error(e);
+    });
   }
 }
 </script>

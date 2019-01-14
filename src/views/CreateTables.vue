@@ -3,6 +3,12 @@
     <el-header class="header" height="80px">
       <common-header></common-header>
     </el-header>
+    <div class="project-setting">
+      <label><b>編集用URL：</b></label>
+      <label>{{this.config.URL_BASE}}/{{this.getEditId()}}</label><br>
+      <label><b>共有用URL：</b></label>
+      <label>{{this.config.URL_BASE}}/{{this.getReferenceId()}}</label>
+    </div>
     <el-container class="main">
       <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
         <el-menu>
@@ -73,9 +79,9 @@ import MyTable from "@/components/Table.vue";
 import TableEntity from "@/entity/Table.ts";
 import Person from "@/entity/Person";
 import Table from "@/components/Table.vue";
+import Config from "@/config/Config.ts";
 import PersonListItem from "@/components/PersonListItem.vue";
 import CommonHeader from "@/components/CommonHeader.vue";
-
 import html2canvas from "html2canvas";
 
 @Component({
@@ -91,6 +97,7 @@ import html2canvas from "html2canvas";
 export default class Createtable extends Vue {
   private tables: Array<TableEntity> = [];
   private personName: string = "";
+  private config: Config = new Config();
   @Mutation("TableSetting/updateNumberOfPerTables") updateNumberOfPerTables!: (
     newValue: number
   ) => void;
@@ -98,6 +105,9 @@ export default class Createtable extends Vue {
   @Getter("Persons/getPersons") getPersons!: () => [any];
   @Getter("TableSetting/getNumberOfPerTables")
   getNumberOfPerTables!: () => number;
+  @Getter("Project/getName") getProjectName!: () => string;
+  @Getter("Project/getEditId") getEditId!: () => string;
+  @Getter("Project/getReferenceId") getReferenceId!: () => string;
 
   mounted(): void {
     this.dummy();
@@ -214,6 +224,18 @@ export default class Createtable extends Vue {
 </script>
 
 <style scoped>
+.project-setting {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 80px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column; /* Safari */
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  border-bottom: thin solid #f0f0f0;
+}
 .container {
   height: 100%;
   border: 1px solid #eee;
