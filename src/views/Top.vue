@@ -36,9 +36,6 @@ import axios from "axios";
 export default class Createtable extends Vue {
   private labelPosition: string = "left";
   private projectName: string = "";
-
-  @Mutation("Project/create") create!: (newProject: any) => void;
-
   onCreate(): void {
     const config = new Config();
     (async () => {
@@ -55,12 +52,7 @@ export default class Createtable extends Vue {
       const response = await axios.post(`${config.API_URL_BASE}/projects`, {
         name: this.projectName
       });
-      this.create({
-        name: response.data.name, 
-        editId: response.data.editId, 
-        referenceId: response.data.referenceId
-      });
-      this.$router.push({ path: "createTeams" });
+      this.$router.push({ path: `/edit/${response.data.editId}` });
     })().catch(e => {
       console.error(e);
     });

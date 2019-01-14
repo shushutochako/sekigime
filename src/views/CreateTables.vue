@@ -3,11 +3,21 @@
     <el-header class="header" height="80px">
       <common-header></common-header>
     </el-header>
+    <label class="project-name">
+      <u>
+        <b>{{this.getProjectName()}}</b>
+      </u>
+    </label>
     <div class="project-setting">
-      <label><b>編集用URL：</b></label>
-      <label>{{this.config.URL_BASE}}/{{this.getEditId()}}</label><br>
-      <label><b>共有用URL：</b></label>
-      <label>{{this.config.URL_BASE}}/{{this.getReferenceId()}}</label>
+      <label>
+        <b>編集用URL：</b>
+      </label>
+      <label>{{this.config.URL_BASE}}/edit/{{this.getEditId()}}</label>
+      <br>
+      <label>
+        <b>共有用URL：</b>
+      </label>
+      <label>{{this.config.URL_BASE}}/ref/{{this.getReferenceId()}}</label>
     </div>
     <el-container class="main">
       <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
@@ -62,6 +72,9 @@
           <span class="download-button-area">
             <el-button @click="download">チーム表をダウンロード</el-button>
           </span>
+          <span class="save-button-area">
+            <el-button @click="save">保存</el-button>
+          </span>
           <div id="table-container" class="table-container">
             <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
           </div>
@@ -83,6 +96,7 @@ import Config from "@/config/Config.ts";
 import PersonListItem from "@/components/PersonListItem.vue";
 import CommonHeader from "@/components/CommonHeader.vue";
 import html2canvas from "html2canvas";
+import axios from "axios";
 
 @Component({
   components: {
@@ -91,7 +105,7 @@ import html2canvas from "html2canvas";
     CommonHeader
   },
   methods: {
-    ...mapMutations('TableSetting',['updateNumberOfPersons'])
+    ...mapMutations("TableSetting", ["updateNumberOfPersons"])
   }
 })
 export default class Createtable extends Vue {
@@ -102,26 +116,49 @@ export default class Createtable extends Vue {
     newValue: number
   ) => void;
   @Mutation("Persons/add") addPerson!: (newPerson: any) => void;
+  @Mutation("Project/create") setProject!: (newProject: any) => void;
   @Getter("Persons/getPersons") getPersons!: () => [any];
   @Getter("TableSetting/getNumberOfPerTables")
   getNumberOfPerTables!: () => number;
   @Getter("Project/getName") getProjectName!: () => string;
   @Getter("Project/getEditId") getEditId!: () => string;
   @Getter("Project/getReferenceId") getReferenceId!: () => string;
+  @Getter("Project/getId") getProjectId!: () => string;
 
   mounted(): void {
-    this.dummy();
+    this.tables = [];
+    if (this.$route.path.match(/edit/)) {
+      this.bootEditMode();
+    } else {
+      this.bootRefMode();
+    }
   }
 
-  dummy(): void {
-    this.tables = [];
+  bootRefMode(): void {
+    (async () => {
+      const response = await axios.get(
+        `${this.config.API_URL_BASE}/projects/ref/${this.$route.params.refId}`
+      );
+      if (response.data !== null) {
+        this.setProject({
+          id: response.data.id,
+          name: response.data.name,
+          referenceId: response.data.referenceId
+        });
+      }
+    })();
   }
+
+  bootEditMode(): void {
+    console.log("bootEditMode");
+    console.log(this.$route.params);
+    console.log(this.$route.path);
+  }
+
+  dummy(): void {}
 
   download(): void {
-    if (this.tables.length < 1) {
-      this.$alert("チーム表を作成してください。", "", {
-        confirmButtonText: "閉じる"
-      });
+    if (this.errorNoTeams()) {
       return;
     }
     html2canvas(document.getElementById("table-container")!).then(canvas => {
@@ -144,6 +181,35 @@ export default class Createtable extends Vue {
         link.click();
       }
     });
+  }
+
+  save(): void {
+    if (this.errorNoTeams()) {
+      return;
+    }
+    const updateData = {
+      persons: this.getPersons(),
+      teams: this.tables,
+      numberOfPerTables: this.numberOfPerTables
+    };
+    axios({
+      method: "PUT",
+      url: `${this.config.API_URL_BASE}/projects/${this.getProjectId()}`,
+      headers: { "EDIT-ID": this.getEditId() },
+      data: {
+        data: updateData
+      }
+    }).then(response => console.log(response.status));
+  }
+
+  errorNoTeams(): Boolean {
+    if (this.tables.length < 1) {
+      this.$alert("チーム表を作成してください。", "", {
+        confirmButtonText: "閉じる"
+      });
+      return true;
+    }
+    return false;
   }
 
   get numberOfPerTables(): number {
@@ -224,6 +290,10 @@ export default class Createtable extends Vue {
 </script>
 
 <style scoped>
+.project-name {
+  margin-top: 20px;
+  font-size: 36px;
+}
 .project-setting {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -295,6 +365,9 @@ export default class Createtable extends Vue {
 }
 .download-button-area {
   margin-left: 20px;
+}
+.save-button-area {
+  margin-left: 60px;
 }
 </style>
 
