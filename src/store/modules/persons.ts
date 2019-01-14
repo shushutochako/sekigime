@@ -8,7 +8,6 @@ export const Persons = {
       state.persons.push(newPerson);
     },
     remove (state: any, index: number) {
-      console.log("removeremoveremoveremove")
       state.persons.splice(index,1);
     }
   },

@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.2/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.f23f96c0208f7e61d6ba644b90da6b0f.js"
+  "/precache-manifest.0bb855e1a74f5c2a7c037d1ce668d1d0.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "vue-typescript-sample"});
+workbox.core.setCacheNameDetails({prefix: "team-gime"});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

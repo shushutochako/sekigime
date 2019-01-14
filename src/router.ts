@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import CreateTables from './views/CreateTables.vue';
+import Top from './views/Top.vue';
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -11,11 +12,16 @@ Vue.use(ElementUI)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
+  routes: [ 
+    {
+      path: '/createTeams',
+      name: 'createTeams',
+      component: CreateTables,
+    },
     {
       path: '/',
-      name: 'createTables',
-      component: CreateTables,
+      name: 'top',
+      component: Top,
     },
     {
       path: '/about',

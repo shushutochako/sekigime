@@ -1,9 +1,7 @@
 <template>
   <el-container class="container">
     <el-header class="header" height="80px">
-      <span class="header-text">
-          <img class="header-logo" height="64px" alt="Header logo" src="../assets/header_logo.png">
-      </span>
+      <common-header></common-header>
     </el-header>
     <el-container class="main">
       <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
@@ -76,15 +74,18 @@ import TableEntity from "@/entity/Table.ts";
 import Person from "@/entity/Person";
 import Table from "@/components/Table.vue";
 import PersonListItem from "@/components/PersonListItem.vue";
+import CommonHeader from "@/components/CommonHeader.vue";
+
 import html2canvas from "html2canvas";
 
 @Component({
   components: {
     MyTable,
-    PersonListItem
+    PersonListItem,
+    CommonHeader
   },
   methods: {
-    // ...mapMutations('TableSetting',['updateNumberOfPersons'])
+    ...mapMutations('TableSetting',['updateNumberOfPersons'])
   }
 })
 export default class Createtable extends Vue {
@@ -109,7 +110,7 @@ export default class Createtable extends Vue {
   download(): void {
     if (this.tables.length < 1) {
       this.$alert("チーム表を作成してください。", "", {
-        confirmButtonText: "閉じる",
+        confirmButtonText: "閉じる"
       });
       return;
     }
@@ -265,18 +266,10 @@ export default class Createtable extends Vue {
   margin-right: 10px;
   margin-bottom: 10px;
 }
-.header-text {
-  font-size: 2em;
-  color: lightgray;
-}
 .header {
   height: 80px;
   line-height: 80px;
   background: #3d455a;
-}
-.header-logo {
-  margin-top: 8px;
-  margin-bottom: 8px;
 }
 .download-button-area {
   margin-left: 20px;
