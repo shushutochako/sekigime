@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit",
-    "postinstall": "npm run build --production"
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@types/html2canvas": "0.0.35",
