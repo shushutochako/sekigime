@@ -13,15 +13,33 @@ const config = new Config();
 
 Vue.use(Router);
 Vue.use(ElementUI);
-const beforeRefTeams = (to: any, from: any, next: any) => {
 
-  if (!to.params.refId) {
+const beforeEditTeams = (to: any, from: any, next: any) => {
+
+  if (!to.params.hash) {
     next({name:'top'})
     return
   }
 
   (async () => {
-    const response = await axios.get(`${config.API_URL_BASE}/projects/ref/${to.params.refId}`);
+    const response = await axios.get(`${config.API_URL_BASE}/projects/edit/${to.params.hash}`);
+    if (response.data === null) {
+      next({name:'top'});
+    } else {
+      next();
+    }
+  })();
+}
+
+const beforeRefTeams = (to: any, from: any, next: any) => {
+
+  if (!to.params.hash) {
+    next({name:'top'})
+    return
+  }
+
+  (async () => {
+    const response = await axios.get(`${config.API_URL_BASE}/projects/ref/${to.params.hash}`);
     if (response.data === null) {
       next({name:'top'});
     } else {
@@ -39,12 +57,13 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [ 
     {
-      path: '/edit/:editId',
+      path: '/edit/:hash',
       name: 'editTeams',
       component: CreateTables,
+      beforeEnter: beforeEditTeams
     },
     {
-      path: '/ref/:refId',
+      path: '/ref/:hash',
       name: 'refTeams',
       component: CreateTables,
       beforeEnter: beforeRefTeams

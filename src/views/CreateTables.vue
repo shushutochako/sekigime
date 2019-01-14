@@ -9,10 +9,12 @@
       </u>
     </label>
     <div class="project-setting">
-      <label>
-        <b>編集用URL：</b>
-      </label>
-      <label>{{this.config.URL_BASE}}/edit/{{this.getEditId()}}</label>
+      <div class="project-setting-row" v-if="editMode">
+        <label>
+          <b>編集用URL：</b>
+        </label>
+        <label>{{this.config.URL_BASE}}/edit/{{this.getEditId()}}</label>
+      </div>
       <br>
       <label>
         <b>共有用URL：</b>
@@ -68,11 +70,11 @@
       </el-aside>
       <el-container>
         <el-main>
-          <el-button @click="onShuffle">チームを決める</el-button>
+          <el-button @click="onShuffle" v-if="editMode">チームを決める</el-button>
           <span class="download-button-area">
             <el-button @click="download">チーム表をダウンロード</el-button>
           </span>
-          <span class="save-button-area">
+          <span class="save-button-area" v-if="editMode">
             <el-button @click="save">保存</el-button>
           </span>
           <div id="table-container" class="table-container">
@@ -112,6 +114,8 @@ export default class Createtable extends Vue {
   private tables: Array<TableEntity> = [];
   private personName: string = "";
   private config: Config = new Config();
+  private editMode: Boolean = false;
+
   @Mutation("TableSetting/updateNumberOfPerTables") updateNumberOfPerTables!: (
     newValue: number
   ) => void;
@@ -137,7 +141,7 @@ export default class Createtable extends Vue {
   bootRefMode(): void {
     (async () => {
       const response = await axios.get(
-        `${this.config.API_URL_BASE}/projects/ref/${this.$route.params.refId}`
+        `${this.config.API_URL_BASE}/projects/ref/${this.$route.params.hash}`
       );
       if (response.data !== null) {
         this.setProject({
@@ -150,9 +154,20 @@ export default class Createtable extends Vue {
   }
 
   bootEditMode(): void {
-    console.log("bootEditMode");
-    console.log(this.$route.params);
-    console.log(this.$route.path);
+    (async () => {
+      const response = await axios.get(
+        `${this.config.API_URL_BASE}/projects/edit/${this.$route.params.hash}`
+      );
+      if (response.data !== null) {
+        this.editMode = true;
+        this.setProject({
+          id: response.data.id,
+          name: response.data.name,
+          editId: response.data.editId,
+          referenceId: response.data.referenceId
+        });
+      }
+    })();
   }
 
   dummy(): void {}
@@ -306,6 +321,15 @@ export default class Createtable extends Vue {
   align-items: flex-start;
   border-bottom: thin solid #f0f0f0;
 }
+.project-setting-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column; /* Safari */
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+}
+
 .container {
   height: 100%;
   border: 1px solid #eee;
