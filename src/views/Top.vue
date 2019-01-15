@@ -1,5 +1,5 @@
 <template>
-  <el-container class="container">
+  <el-container class="container" v-loading.fullscreen.lock="loading">
     <el-header class="header" height="80px">
       <common-header></common-header>
     </el-header>
@@ -36,6 +36,7 @@ import axios from "axios";
 export default class Createtable extends Vue {
   private labelPosition: string = "left";
   private projectName: string = "";
+  private loading: Boolean = false;
   onCreate(): void {
     const config = new Config();
     (async () => {
@@ -48,10 +49,11 @@ export default class Createtable extends Vue {
           type: "info"
         }
       );
-
+      this.loading = true;
       const response = await axios.post(`${config.API_URL_BASE}/projects`, {
         name: this.projectName
       });
+      this.loading = false;
       this.$router.push({ path: `/edit/${response.data.editId}` });
     })().catch(e => {
       console.error(e);

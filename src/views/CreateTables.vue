@@ -1,5 +1,5 @@
 <template>
-  <el-container class="container">
+  <el-container class="container" v-loading.fullscreen.lock="loading">
     <el-header class="header" height="80px">
       <common-header></common-header>
     </el-header>
@@ -115,6 +115,7 @@ export default class Createtable extends Vue {
   private personName: string = "";
   private config: Config = new Config();
   private editMode: Boolean = false;
+  private loading: Boolean = false;
 
   @Mutation("TableSetting/updateNumberOfPerTables") updateNumberOfPerTables!: (
     newValue: number
@@ -140,9 +141,11 @@ export default class Createtable extends Vue {
 
   bootRefMode(): void {
     (async () => {
+      this.loading = true;
       const response = await axios.get(
         `${this.config.API_URL_BASE}/projects/ref/${this.$route.params.hash}`
       );
+      this.loading = false;
       if (response.data !== null) {
         this.setProject({
           id: response.data.id,
@@ -155,9 +158,11 @@ export default class Createtable extends Vue {
 
   bootEditMode(): void {
     (async () => {
+      this.loading = true;
       const response = await axios.get(
         `${this.config.API_URL_BASE}/projects/edit/${this.$route.params.hash}`
       );
+      this.loading = false;
       if (response.data !== null) {
         this.editMode = true;
         this.setProject({
