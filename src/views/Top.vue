@@ -3,10 +3,13 @@
     <el-header class="header" height="80px">
       <common-header></common-header>
     </el-header>
+    <div class="heading">
+      <h2>面倒なチーム分けを自動で作成します。共有URLで他の人に簡単に共有!</h2>
+    </div>
     <el-main class="main input-container">
-      <el-form class="project-form" :label-position="labelPosition" label-width="120px">
+      <el-form :inline="true" class="project-form" :label-position="labelPosition" label-width="120px">
         <el-form-item label="プロジェクト名">
-          <el-input class="input" tabindex="1" placeholder="プロジェクト名を入力してください" v-model="projectName"></el-input>
+          <el-input width="200px" tabindex="1" placeholder="プロジェクト名を入力してください" v-model="projectName"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="create-button" @click="onCreate">作成</el-button>
@@ -74,19 +77,31 @@ export default class Createtable extends Vue {
   height: 100%;
   border: 1px solid #eee;
 }
+.heading {
+  margin-top: 10px;
+  margin-left: 100px;
+  margin-right: 100px;
+  text-align: left;
+  color: darkorange;
+  border-bottom: medium solid #ececec;
+}
 .main {
   align-items: center;
   margin-top: 20px;
   width: 100%;
 }
+.el-input{
+  width: 280px;
+}
 .input-container {
+  margin-left: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: flex-start;
 }
 .project-form {
-  width: 400px;
+  width: 500px;
   margin-top: 10px;
 }
 .header {

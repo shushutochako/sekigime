@@ -41,8 +41,10 @@ const beforeRefTeams = (to: any, from: any, next: any) => {
   (async () => {
     const response = await axios.get(`${config.API_URL_BASE}/projects/ref/${to.params.hash}`);
     if (response.data === null) {
+      console.log("loglog")
       next({name:'top'});
     } else {
+      console.log("logloglog")
       next();
     }
   })();

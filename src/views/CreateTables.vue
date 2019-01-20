@@ -179,7 +179,7 @@ export default class Createtable extends Vue {
   }
 
   restoreData(savedData: any): void {
-    if (savedData ===  null) {
+    if (savedData === null) {
       return;
     }
     this.updateNumberOfPerTables(savedData.numberOfPerTables);
@@ -226,19 +226,36 @@ export default class Createtable extends Vue {
     if (this.errorNoTeams()) {
       return;
     }
-    const updateData = {
-      persons: this.getPersons(),
-      teams: this.tables,
-      numberOfPerTables: this.numberOfPerTables
-    };
-    axios({
-      method: "PUT",
-      url: `${this.config.API_URL_BASE}/projects/${this.getProjectId()}`,
-      headers: { "EDIT-ID": this.getEditId() },
-      data: {
-        data: updateData
+    (async () => {
+      await this.$confirm(
+        "データを保存します。よろしいですか？",
+        "データ保存",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "info"
+        }
+      );
+      const updateData = {
+        persons: this.getPersons(),
+        teams: this.tables,
+        numberOfPerTables: this.numberOfPerTables
+      };
+      this.loading = true;
+      await axios({
+        method: "PUT",
+        url: `${this.config.API_URL_BASE}/projects/${this.getProjectId()}`,
+        headers: { "EDIT-ID": this.getEditId() },
+        data: {
+          data: updateData
+        }
+      });
+      this.loading = false;
+    })().catch(e => {
+      if (e !== 'cancel') {
+        console.error(e)
       }
-    }).then(response => console.log(response.status));
+    });
   }
 
   errorNoTeams(): Boolean {
