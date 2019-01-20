@@ -37,7 +37,12 @@ export default class Createtable extends Vue {
   private labelPosition: string = "left";
   private projectName: string = "";
   private loading: Boolean = false;
+
   onCreate(): void {
+    if (this.projectName.length < 1) {
+      this.$message.error('プロジェクト名を入力して下さい。');
+      return;
+    }
     const config = new Config();
     (async () => {
       await this.$confirm(
@@ -55,8 +60,10 @@ export default class Createtable extends Vue {
       });
       this.loading = false;
       this.$router.push({ path: `/edit/${response.data.editId}` });
-    })().catch(e => {
-      console.error(e);
+    })().catch((e) => {
+      if (e !== 'cancel') {
+        this.$message.error('作成に失敗しました。しばらく経ってから再実行してください。');
+      }
     });
   }
 }

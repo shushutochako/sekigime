@@ -7,6 +7,9 @@ export const Persons = {
     add (state: any, newPerson: any) {
       state.persons.push(newPerson);
     },
+    setPersons (state: any, persons: Array<any>) {
+      state.persons = persons;
+    },
     remove (state: any, index: number) {
       state.persons.splice(index,1);
     }

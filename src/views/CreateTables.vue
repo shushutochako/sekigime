@@ -23,7 +23,7 @@
     </div>
     <el-container class="main">
       <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
-        <el-menu>
+        <el-menu :default-openeds="['1']">
           <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
             <label class="label">
               <b>1チームあたりの人数</b>
@@ -121,6 +121,7 @@ export default class Createtable extends Vue {
     newValue: number
   ) => void;
   @Mutation("Persons/add") addPerson!: (newPerson: any) => void;
+  @Mutation("Persons/setPersons") setPersons!: (persons: Array<any>) => void;
   @Mutation("Project/create") setProject!: (newProject: any) => void;
   @Getter("Persons/getPersons") getPersons!: () => [any];
   @Getter("TableSetting/getNumberOfPerTables")
@@ -147,6 +148,7 @@ export default class Createtable extends Vue {
       );
       this.loading = false;
       if (response.data !== null) {
+        this.restoreData(response.data.data);
         this.setProject({
           id: response.data.id,
           name: response.data.name,
@@ -165,6 +167,7 @@ export default class Createtable extends Vue {
       this.loading = false;
       if (response.data !== null) {
         this.editMode = true;
+        this.restoreData(response.data.data);
         this.setProject({
           id: response.data.id,
           name: response.data.name,
@@ -173,6 +176,22 @@ export default class Createtable extends Vue {
         });
       }
     })();
+  }
+
+  restoreData(savedData: any): void {
+    if (savedData ===  null) {
+      return;
+    }
+    this.updateNumberOfPerTables(savedData.numberOfPerTables);
+    this.setPersons(savedData.persons);
+    this.tables = savedData.teams.map((team: any) => {
+      return new TableEntity(
+        team.name,
+        team.members.map((member: any) => {
+          return new Person(member.name);
+        })
+      );
+    });
   }
 
   dummy(): void {}
