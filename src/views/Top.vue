@@ -5,11 +5,12 @@
     </el-header>
     <div class="heading">
       <h2>面倒なチーム分けを自動で作成します。共有URLで他の人に簡単に共有!</h2>
+      <p class="note">※ 作成したチーム表の保存や画像ダウンロードも可能です。</p>
     </div>
     <el-main class="main input-container">
       <el-form :inline="true" class="project-form" :label-position="labelPosition" label-width="120px">
-        <el-form-item label="プロジェクト名">
-          <el-input width="200px" tabindex="1" placeholder="プロジェクト名を入力してください" v-model="projectName"></el-input>
+        <el-form-item label="イベント名">
+          <el-input width="200px" tabindex="1" placeholder="イベント名を入力してください" v-model="projectName"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="create-button" @click="onCreate">作成</el-button>
@@ -84,6 +85,11 @@ export default class Createtable extends Vue {
   text-align: left;
   color: darkorange;
   border-bottom: medium solid #ececec;
+}
+.note {
+  margin-top: 10px;
+  align: left;
+  color: gray;
 }
 .main {
   align-items: center;
