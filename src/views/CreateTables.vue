@@ -281,7 +281,6 @@ export default class Createtable extends Vue {
   }
 
   onClick(): void {
-    console.log(this.getNumberOfPerTables());
   }
 
   onAdd(): void {

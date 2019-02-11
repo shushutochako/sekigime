@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.2/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.97710a168eaed8609e63e0bd36777073.js"
+  "/precache-manifest.0e03a42b4ebccce3002e28960648881e.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "team-gime"});

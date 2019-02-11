@@ -30,7 +30,6 @@ import draggable from "vuedraggable";
 export default class Table extends Vue {
   @Prop() public table!: any;
   mounted(): void {
-    console.log("aaaaaaaaaaaaaaa");
   }
 }
 </script>
