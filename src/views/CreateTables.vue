@@ -251,9 +251,10 @@ export default class Createtable extends Vue {
         }
       });
       this.loading = false;
+      this.setWarning(false);
     })().catch(e => {
-      if (e !== 'cancel') {
-        console.error(e)
+      if (e !== "cancel") {
+        console.error(e);
       }
     });
   }
@@ -280,8 +281,7 @@ export default class Createtable extends Vue {
     this.updateNumberOfPerTables(Number(value));
   }
 
-  onClick(): void {
-  }
+  onClick(): void {}
 
   onAdd(): void {
     if (this.personName === "" || this.personName === null) {
@@ -290,10 +290,18 @@ export default class Createtable extends Vue {
     this.addPerson({
       name: this.personName
     });
+    this.setWarning(true);
   }
 
   private onShuffle(): void {
     this.createTables();
+    this.setWarning(true);
+  }
+
+  private setWarning(needs: boolean): void {
+    window.onbeforeunload = needs ? e => {
+      e.returnValue = "変更が保存されていません。よろしいですか？";
+    } : null;
   }
 
   createTables(): void {
