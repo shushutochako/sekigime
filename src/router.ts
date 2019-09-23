@@ -3,16 +3,18 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import CreateTables from './views/CreateTables.vue';
 import Top from './views/Top.vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 import axios from 'axios';
 import Config from './config/Config';
 import { Mutation } from "vuex-class";
 
+// Buefy
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
+Vue.use(Buefy);
+
 const config = new Config();
 
 Vue.use(Router);
-Vue.use(ElementUI);
 
 const beforeEditTeams = (to: any, from: any, next: any) => {
 

@@ -227,15 +227,15 @@ export default class Createtable extends Vue {
       return;
     }
     (async () => {
-      await this.$confirm(
-        "データを保存します。よろしいですか？",
-        "データ保存",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "info"
-        }
-      );
+      // await this.$confirm(
+      //   "データを保存します。よろしいですか？",
+      //   "データ保存",
+      //   {
+      //     confirmButtonText: "OK",
+      //     cancelButtonText: "Cancel",
+      //     type: "info"
+      //   }
+      // );
       const updateData = {
         persons: this.getPersons(),
         teams: this.tables,
@@ -261,9 +261,9 @@ export default class Createtable extends Vue {
 
   errorNoTeams(): Boolean {
     if (this.tables.length < 1) {
-      this.$alert("チーム表を作成してください。", "", {
-        confirmButtonText: "閉じる"
-      });
+      // this.$alert("チーム表を作成してください。", "", {
+      //   confirmButtonText: "閉じる"
+      // });
       return true;
     }
     return false;

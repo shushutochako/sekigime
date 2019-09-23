@@ -21,5 +21,6 @@ export default class CommonHeader extends Vue {}
 .header-logo {
   margin-top: 8px;
   margin-bottom: 8px;
+  height: 100%;
 }
 </style>
