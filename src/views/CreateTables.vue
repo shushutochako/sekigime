@@ -1,8 +1,8 @@
 <template>
-  <el-container class="container" v-loading.fullscreen.lock="loading">
-    <el-header class="header" height="80px">
+  <div class="container is-fullhd" v-loading.fullscreen.lock="loading">
+    <header class="header">
       <common-header></common-header>
-    </el-header>
+    </header>
     <label class="project-name">
       <u>
         <b>{{this.getProjectName()}}</b>
@@ -13,61 +13,65 @@
         <label>
           <b>編集用URL：</b>
         </label>
-        <label>{{this.config.URL_BASE}}/edit/{{this.getEditId()}}</label>
+        <label id="edit-url">{{this.getEditURL()}}</label>
+        <b-button type="is-success" class="copy-button" @click="onCopy(true)">copy</b-button>
       </div>
-      <br>
+      <br />
       <label>
         <b>共有用URL：</b>
       </label>
-      <label>{{this.config.URL_BASE}}/ref/{{this.getReferenceId()}}</label>
+      <label id="ref-url">{{this.getRefURL()}}</label>
+      <b-button type="is-success" class="copy-button" @click="onCopy(false)">copy</b-button>
     </div>
-    <el-container class="main">
-      <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
-        <el-menu :default-openeds="['1']">
-          <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
-            <label class="label">
-              <b>1チームあたりの人数</b>
-            </label>
-            <el-input-number
-              class="input"
-              tabindex="1"
-              :min="1"
-              :max="50"
-              id="number-of-per-table"
-              v-model="numberOfPerTables"
-            ></el-input-number>
-          </el-form>
-          <br>
-          <br>
-          <el-submenu index="1">
-            <template slot="title">
-              <b>参加メンバー （{{this.numberOfMembers}}人）</b>
-            </template>
-            <el-form class="input-container" :inline="true">
-              <el-input
-                placeholder="名前を入力してください"
-                type="text"
+    <!-- <div class="tile is-ancestor">
+      <div class="tile is-vertical is-8">
+        <div class="tile is-parent" width="300px" style="background-color: rgb(238, 241, 246)">
+          <el-menu :default-openeds="['1']">
+            <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
+              <label class="label">
+                <b>1チームあたりの人数</b>
+              </label>
+              <el-input-number
+                class="input"
                 tabindex="1"
-                name="person-name"
-                id="person-name"
-                v-model="personName"
-              >
-                <el-button slot="append" @click="onAdd">追加</el-button>
-              </el-input>
+                :min="1"
+                :max="50"
+                id="number-of-per-table"
+                v-model="numberOfPerTables"
+              ></el-input-number>
             </el-form>
-            <div>
-              <person-list-item
-                v-for="(person, i) in getPersons()"
-                :person="person"
-                :showRemove="true"
-                :index="i"
-                :key="i"
-                class="person-list-container"
-              />
-            </div>
-          </el-submenu>
-        </el-menu>
-      </el-aside>
+            <br />
+            <br />
+            <el-submenu index="1">
+              <template slot="title">
+                <b>参加メンバー （{{this.numberOfMembers}}人）</b>
+              </template>
+              <el-form class="input-container" :inline="true">
+                <el-input
+                  placeholder="名前を入力してください"
+                  type="text"
+                  tabindex="1"
+                  name="person-name"
+                  id="person-name"
+                  v-model="personName"
+                >
+                  <el-button slot="append" @click="onAdd">追加</el-button>
+                </el-input>
+              </el-form>
+              <div>
+                <person-list-item
+                  v-for="(person, i) in getPersons()"
+                  :person="person"
+                  :showRemove="true"
+                  :index="i"
+                  :key="i"
+                  class="person-list-container"
+                />
+              </div>
+            </el-submenu>
+          </el-menu>
+        </div>
+      </div>
       <el-container>
         <el-main>
           <el-button @click="onShuffle" v-if="editMode">チームを決める</el-button>
@@ -78,12 +82,72 @@
             <el-button @click="save">保存</el-button>
           </span>
           <div id="table-container" class="table-container">
-            <my-table v-for="(table, i) in tables" :table="table" :key="i"/>
+            <my-table v-for="(table, i) in tables" :table="table" :key="i" />
           </div>
         </el-main>
       </el-container>
-    </el-container>
-  </el-container>
+    </div>-->
+
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <article class="tile is-child notification">
+          <div class="content">
+            <section>
+              <p>
+                <b>1チームあたりの人数</b>
+              </p>
+              <b-field>
+                <b-numberinput
+                  min="1"
+                  max="50"
+                  type="is-success"
+                  v-model="numberOfPerTables"
+                  id="number-of-per-table"
+                ></b-numberinput>
+              </b-field>
+            </section>
+            <section class="add-person">
+              <p>
+                <b>参加メンバー （{{this.numberOfMembers}}人）</b>
+              </p>
+              <b-field>
+                <b-input width="200px" placeholder="名前を入力" v-model="personName"></b-input>
+                <b-button class="create-button" type="is-success" @click="onAdd">追加</b-button>
+              </b-field>
+              <div>
+                <person-list-item
+                  v-for="(person, i) in getPersons()"
+                  :person="person"
+                  :showRemove="true"
+                  :index="i"
+                  :key="i"
+                  class="person-list-container"
+                />
+              </div>
+            </section>
+          </div>
+        </article>
+      </div>
+      <div class="tile is-vertical is-9">
+        <div class="tile is-parent">
+          <article class="tile is-child notification">
+            <div class="content">
+              <b-button @click="onShuffle" v-if="editMode">チームを決める</b-button>
+              <span class="download-button-area">
+                <b-button @click="download">チーム表をダウンロード</b-button>
+              </span>
+              <span class="save-button-area" v-if="editMode">
+                <b-button @click="save">保存</b-button>
+              </span>
+              <div id="table-container" class="table-container">
+                <my-table v-for="(table, i) in tables" :table="table" :key="i" />
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -178,6 +242,14 @@ export default class Createtable extends Vue {
     })();
   }
 
+  getEditURL(): string {
+    return `${this.config.URL_BASE}/edit/${this.getEditId()}`
+  }
+
+  getRefURL(): string {
+    return `${this.config.URL_BASE}/ref/${this.getReferenceId()}`
+  }
+
   restoreData(savedData: any): void {
     if (savedData === null) {
       return;
@@ -220,6 +292,14 @@ export default class Createtable extends Vue {
         link.click();
       }
     });
+  }
+
+  onCopy(isEdit: boolean): void {
+    if (isEdit) {
+      this.$copyText(this.getEditURL());
+    } else {
+      this.$copyText(this.getRefURL());
+    }
   }
 
   save(): void {
@@ -299,9 +379,11 @@ export default class Createtable extends Vue {
   }
 
   private setWarning(needs: boolean): void {
-    window.onbeforeunload = needs ? e => {
-      e.returnValue = "変更が保存されていません。よろしいですか？";
-    } : null;
+    window.onbeforeunload = needs
+      ? e => {
+          e.returnValue = "変更が保存されていません。よろしいですか？";
+        }
+      : null;
   }
 
   createTables(): void {
@@ -440,6 +522,12 @@ export default class Createtable extends Vue {
 }
 .save-button-area {
   margin-left: 60px;
+}
+.add-person {
+  margin-top: 40px;
+}
+.copy-button {
+  width: 50px;
 }
 </style>
 

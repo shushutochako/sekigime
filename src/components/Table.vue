@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="my-container">
     <div class="title-container">
       <span class="table-name"><b>{{ table.name }}</b></span>
     </div>
@@ -36,7 +36,7 @@ export default class Table extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.container {
+.my-container {
   margin: 10px;
   background: #FBE9AB;
   width: 300px;
