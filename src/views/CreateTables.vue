@@ -23,70 +23,6 @@
       <label id="ref-url">{{this.getRefURL()}}</label>
       <b-button type="is-success" class="copy-button" @click="onCopy(false)">copy</b-button>
     </div>
-    <!-- <div class="tile is-ancestor">
-      <div class="tile is-vertical is-8">
-        <div class="tile is-parent" width="300px" style="background-color: rgb(238, 241, 246)">
-          <el-menu :default-openeds="['1']">
-            <el-form class="input-container" :inline="true" :model="sizeForm" size="mini">
-              <label class="label">
-                <b>1チームあたりの人数</b>
-              </label>
-              <el-input-number
-                class="input"
-                tabindex="1"
-                :min="1"
-                :max="50"
-                id="number-of-per-table"
-                v-model="numberOfPerTables"
-              ></el-input-number>
-            </el-form>
-            <br />
-            <br />
-            <el-submenu index="1">
-              <template slot="title">
-                <b>参加メンバー （{{this.numberOfMembers}}人）</b>
-              </template>
-              <el-form class="input-container" :inline="true">
-                <el-input
-                  placeholder="名前を入力してください"
-                  type="text"
-                  tabindex="1"
-                  name="person-name"
-                  id="person-name"
-                  v-model="personName"
-                >
-                  <el-button slot="append" @click="onAdd">追加</el-button>
-                </el-input>
-              </el-form>
-              <div>
-                <person-list-item
-                  v-for="(person, i) in getPersons()"
-                  :person="person"
-                  :showRemove="true"
-                  :index="i"
-                  :key="i"
-                  class="person-list-container"
-                />
-              </div>
-            </el-submenu>
-          </el-menu>
-        </div>
-      </div>
-      <el-container>
-        <el-main>
-          <el-button @click="onShuffle" v-if="editMode">チームを決める</el-button>
-          <span class="download-button-area">
-            <el-button @click="download">チーム表をダウンロード</el-button>
-          </span>
-          <span class="save-button-area" v-if="editMode">
-            <el-button @click="save">保存</el-button>
-          </span>
-          <div id="table-container" class="table-container">
-            <my-table v-for="(table, i) in tables" :table="table" :key="i" />
-          </div>
-        </el-main>
-      </el-container>
-    </div>-->
 
     <div class="tile is-ancestor">
       <div class="tile is-parent">
@@ -132,13 +68,18 @@
         <div class="tile is-parent">
           <article class="tile is-child notification">
             <div class="content">
-              <b-button @click="onShuffle" v-if="editMode">チームを決める</b-button>
-              <span class="download-button-area">
-                <b-button @click="download">チーム表をダウンロード</b-button>
-              </span>
-              <span class="save-button-area" v-if="editMode">
-                <b-button @click="save">保存</b-button>
-              </span>
+              <div class="menu-button-area">
+                <b-field>
+                  <b-button
+                    class="menu-button"
+                    type="is-info"
+                    @click="onShuffle"
+                    v-if="editMode"
+                  >チームを決める</b-button>
+                  <b-button class="menu-button" type="is-info" @click="download">チーム表をダウンロード</b-button>
+                  <b-button class="menu-button" type="is-info" @click="save">データを保存</b-button>
+                </b-field>
+              </div>
               <div id="table-container" class="table-container">
                 <my-table v-for="(table, i) in tables" :table="table" :key="i" />
               </div>
@@ -243,11 +184,11 @@ export default class Createtable extends Vue {
   }
 
   getEditURL(): string {
-    return `${this.config.URL_BASE}/edit/${this.getEditId()}`
+    return `${this.config.URL_BASE}/edit/${this.getEditId()}`;
   }
 
   getRefURL(): string {
-    return `${this.config.URL_BASE}/ref/${this.getReferenceId()}`
+    return `${this.config.URL_BASE}/ref/${this.getReferenceId()}`;
   }
 
   restoreData(savedData: any): void {
@@ -307,15 +248,7 @@ export default class Createtable extends Vue {
       return;
     }
     (async () => {
-      // await this.$confirm(
-      //   "データを保存します。よろしいですか？",
-      //   "データ保存",
-      //   {
-      //     confirmButtonText: "OK",
-      //     cancelButtonText: "Cancel",
-      //     type: "info"
-      //   }
-      // );
+      await this.confirm('データを保存します。よろしいですか？');
       const updateData = {
         persons: this.getPersons(),
         teams: this.tables,
@@ -341,9 +274,9 @@ export default class Createtable extends Vue {
 
   errorNoTeams(): Boolean {
     if (this.tables.length < 1) {
-      // this.$alert("チーム表を作成してください。", "", {
-      //   confirmButtonText: "閉じる"
-      // });
+      this.$dialog.alert({
+        message: 'チーム表を作成してください。'
+      });
       return true;
     }
     return false;
@@ -359,6 +292,20 @@ export default class Createtable extends Vue {
 
   set numberOfPerTables(value) {
     this.updateNumberOfPerTables(Number(value));
+  }
+
+  private confirm(message: string) {
+    return new Promise((resolve, reject) => {
+        this.$dialog.confirm({
+          message: message,
+          onConfirm: () => {
+            resolve();
+          },
+          onCancel: () => {
+            reject('cancel');
+          }
+       });
+    });
   }
 
   onClick(): void {}
@@ -517,17 +464,18 @@ export default class Createtable extends Vue {
   line-height: 80px;
   background: #3d455a;
 }
-.download-button-area {
+.menu-button {
   margin-left: 20px;
-}
-.save-button-area {
-  margin-left: 60px;
 }
 .add-person {
   margin-top: 40px;
 }
 .copy-button {
   width: 50px;
+}
+.menu-button-area {
+  display: -webkit-flex;
+  justify-content: center;
 }
 </style>
 
