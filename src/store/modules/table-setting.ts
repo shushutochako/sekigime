@@ -9,6 +9,9 @@ export const TableSetting = {
     },
     updateNumberOfPerTables (state: any, newValue: number) {
       state.numberOfPerTables = newValue;
+    },
+    clear(state: any, index: number) {
+      state.numberOfPerTables = 1;
     }
   },
   actions: {

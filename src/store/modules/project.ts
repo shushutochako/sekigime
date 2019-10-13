@@ -13,6 +13,12 @@ export const Project = {
       state.editId = newProject.editId;
       state.referenceId = newProject.referenceId;
     },
+    clear(state: any, index: number) {
+      state.id = 0;
+      state.name = "";
+      state.editId = "";
+      state.referenceId = "";
+    }
   },
   actions: {
   },

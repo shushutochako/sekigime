@@ -1,10 +1,12 @@
 <template>
-  <el-card class="box-card person-item">
-    <div>
-      {{person.name}}
-      <el-button class="button" icon="el-icon-circle-close-outline" v-if="showRemove" @click="onRemove" style="float: right; padding: 3px 0" type="text"></el-button>
+  <div class="list-container">
+    <div class="person-item">
+      <div class="name-text">{{person.name}}</div>
     </div>
-  </el-card>
+    <b-button class="delete-button" v-if="showRemove" @click="onRemove">
+      <vue-fontawesome icon="minus-circle"/>
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -24,17 +26,32 @@ export default class PersonListItem extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.list-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row; /* Safari */
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .person-item {
-  background: #FDBC84;
-  margin: 6px;
+  flex-grow: 1;
+  background: #BF360C;
+  padding: 2px;
+  height: 40px;
+  line-height: 40px;
+  max-width: 200px;
+  border-radius: 0.2em;
 }
-.button {
+.delete-button {
   color: gray;
+  margin-left: 10px;
 }
-.text {
-  color: brown;
+.name-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: white;
 }
 </style>
