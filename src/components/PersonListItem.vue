@@ -1,12 +1,11 @@
 <template>
   <div class="list-container">
-    <div class="card person-item">
-      <div>{{person.name}}</div>
+    <div class="person-item">
+      <div class="name-text">{{person.name}}</div>
     </div>
     <b-button class="delete-button" v-if="showRemove" @click="onRemove">
       <vue-fontawesome icon="minus-circle"/>
     </b-button>
-
   </div>
 </template>
 
@@ -33,20 +32,26 @@ export default class PersonListItem extends Vue {
   display: flex;
   -webkit-flex-direction: row; /* Safari */
   flex-direction: row;
-  justify-content: start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
 }
 .person-item {
   flex-grow: 1;
-  background: #fdbc84;
-  padding: 4px;
-  height: 36px;
+  background: #BF360C;
+  padding: 2px;
+  height: 40px;
+  line-height: 40px;
+  max-width: 200px;
+  border-radius: 0.2em;
 }
 .delete-button {
   color: gray;
-  margin-left: 16px;
+  margin-left: 10px;
 }
-.text {
-  color: brown;
+.name-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: white;
 }
 </style>

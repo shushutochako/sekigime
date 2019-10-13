@@ -1,6 +1,6 @@
 <template>
-  <div class="container is-fullhd" v-loading.fullscreen.lock="loading">
-    <header class="header">
+  <div class="container is-fullhd">
+    <header class="header" @click="onClickHeader">
       <common-header></common-header>
     </header>
     <label class="project-name">
@@ -33,12 +33,16 @@
                 <b>1チームあたりの人数</b>
               </p>
               <b-field>
+                <label v-if="!editMode">
+                  {{this.numberOfPerTables}}人
+                </label>
                 <b-numberinput
                   min="1"
                   max="50"
                   type="is-success"
                   v-model="numberOfPerTables"
                   id="number-of-per-table"
+                  v-if="editMode"
                 ></b-numberinput>
               </b-field>
             </section>
@@ -77,7 +81,7 @@
                     v-if="editMode"
                   >チームを決める</b-button>
                   <b-button class="menu-button" type="is-info" @click="download">チーム表をダウンロード</b-button>
-                  <b-button class="menu-button" type="is-info" @click="save">データを保存</b-button>
+                  <b-button class="menu-button" type="is-info" @click="save" v-if="editMode">データを保存</b-button>
                 </b-field>
               </div>
               <div id="table-container" class="table-container">
@@ -88,6 +92,8 @@
         </div>
       </div>
     </div>
+    <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="true">
+    </b-loading>
   </div>
 </template>
 
@@ -275,7 +281,7 @@ export default class Createtable extends Vue {
   errorNoTeams(): Boolean {
     if (this.tables.length < 1) {
       this.$dialog.alert({
-        message: 'チーム表を作成してください。'
+        message: '「チームを決める」を押して、チーム表を作成してください。'
       });
       return true;
     }
@@ -309,6 +315,11 @@ export default class Createtable extends Vue {
   }
 
   onClick(): void {}
+
+  onClickHeader(): void {
+    this.$store.dispatch('clearAll');
+    this.$router.push({ path: '/top' })
+  }
 
   onAdd(): void {
     if (this.personName === "" || this.personName === null) {
@@ -443,8 +454,8 @@ export default class Createtable extends Vue {
 .person-list-container {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .label {

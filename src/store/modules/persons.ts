@@ -12,6 +12,9 @@ export const Persons = {
     },
     remove (state: any, index: number) {
       state.persons.splice(index,1);
+    },
+    clear(state: any, index: number) {
+      state.persons = [];
     }
   },
   actions: {

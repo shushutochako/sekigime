@@ -1,53 +1,57 @@
 <template>
-  <div class="container">
-    <div class="container" v-loading.fullscreen.lock="loading">
-      <header class="header">
-        <common-header></common-header>
-      </header>
-      <section class="section">
-        <h2 class="main-heading">面倒なチーム分けを自動で作成します。共有URLで他の人に簡単に共有!</h2>
-        <div class="input-container">
-          <b-field>
-            <b-input width="200px" placeholder="イベント名を入力" v-model="projectName"></b-input>
-            <b-button class="create-button" type="is-success" @click="onCreate">作成</b-button>
-          </b-field>
+  <div>
+    <header class="header">
+      <common-header></common-header>
+    </header>
+    <div class="container">
+      <div class="container">
+        <section class="section">
+          <h2 class="main-heading">面倒なチーム分けを自動で作成します。共有URLで他の人に簡単に共有!</h2>
+          <div class="input-container">
+            <b-field>
+              <b-input width="200px" placeholder="イベント名を入力" v-model="projectName"></b-input>
+              <b-button class="create-button" type="is-success" @click="onCreate">作成</b-button>
+            </b-field>
+          </div>
+        </section>
+      </div>
+      <section>
+        <div class="description-title">
+          <b>使い方</b>
+        </div>
+        <div class="description">
+          <ol>
+            <li>イベントを作成</li>
+            <li>参加メンバーを追加</li>
+            <li>「チームを決める」でチームを自動編成</li>
+            <li>ドラッグ&ドロップでチーム編成を調整</li>
+            <li>データを共有したい場合は保存ボタンで保存</li>
+            <li>チーム表をダウンロードしたい場合は「チーム表をダウンロード」</li>
+            <li>URLで他の人とデータを共有</li>
+          </ol>
+        </div>
+        <div class="description-title">
+          <b>シチュエーション</b>
+        </div>
+        <div class="description">
+          <ul>
+            <li>飲み会の席分けを決めたい</li>
+            <li>イベントのグループ分けを決めたい</li>
+            <li>チームランチの編成を作りたい</li>
+          </ul>
         </div>
       </section>
+      <div class="tweet-container">
+        <a
+          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+          data-size="large"
+          class="twitter-share-button"
+          data-show-count="false"
+        >Tweet</a>
+      </div>
     </div>
-    <section>
-      <div class="description-title">
-        <b>使い方</b>
-      </div>
-      <div class="description">
-        <ol>
-          <li>イベントを作成</li>
-          <li>参加メンバーを追加</li>
-          <li>「チームを決める」でチームを自動編成</li>
-          <li>ドラッグ&ドロップでチーム編成を調整</li>
-          <li>データを共有したい場合は保存ボタンで保存</li>
-          <li>チーム表をダウンロードしたい場合は「チーム表をダウンロード」</li>
-          <li>URLで他の人とデータを共有</li>
-        </ol>
-      </div>
-      <div class="description-title">
-        <b>シチュエーション</b>
-      </div>
-      <div class="description">
-        <ul>
-          <li>飲み会の席分けを決めたい</li>
-          <li>イベントのグループ分けを決めたい</li>
-          <li>チームランチの編成を作りたい</li>
-        </ul>
-      </div>
-    </section>
-    <div class="tweet-container">
-      <a
-        href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-        data-size="large"
-        class="twitter-share-button"
-        data-show-count="false"
-      >Tweet</a>
-    </div>
+    <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="true">
+    </b-loading>
   </div>
 </template>
 
@@ -86,9 +90,7 @@ export default class Createtable extends Vue {
     }
     const config = new Config();
     (async () => {
-      await this.confirm(
-        'プロジェクトを作成します。よろしいですか？',
-      );
+      await this.confirm("プロジェクトを作成します。よろしいですか？");
       this.loading = true;
       const response = await axios.post(`${config.API_URL_BASE}/projects`, {
         name: this.projectName
@@ -96,9 +98,11 @@ export default class Createtable extends Vue {
       this.loading = false;
       this.$router.push({ path: `/edit/${response.data.editId}` });
     })().catch(e => {
+      this.loading = false;
       if (e !== "cancel") {
+        console.error(e);
         this.$dialog.alert({
-          message: '作成に失敗しました。しばらく経ってから再実行してください。'
+          message: "作成に失敗しました。しばらく経ってから再実行してください。"
         });
       }
     });
@@ -106,15 +110,15 @@ export default class Createtable extends Vue {
 
   private confirm(message: string) {
     return new Promise((resolve, reject) => {
-        this.$dialog.confirm({
-          message: message,
-          onConfirm: () => {
-            resolve();
-          },
-          onCancel: () => {
-            reject('cancel');
-          }
-       });
+      this.$dialog.confirm({
+        message: message,
+        onConfirm: () => {
+          resolve();
+        },
+        onCancel: () => {
+          reject("cancel");
+        }
+      });
     });
   }
 }

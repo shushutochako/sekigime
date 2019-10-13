@@ -12,5 +12,12 @@ export default new Vuex.Store({
     TableSetting,
     Persons,
     Project
+  },
+  actions: {
+    clearAll({ commit }){
+      commit("TableSetting/clear")
+      commit("Persons/clear")
+      commit("Project/clear")
+    }
   }
 });
