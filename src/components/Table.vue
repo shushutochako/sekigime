@@ -8,9 +8,13 @@
     <div class="member-container">
       <draggable
         v-model="table.members"
-        :options="{group:'tableMember'}"
-        @start="drag=true"
-        @end="drag=false"
+        :options="{
+          group:'tableMember',
+          animation: 200,
+          delay: 50,
+        }"
+        :move="canDrag"
+
       >
         <div v-for="(member, i) in table.members" :key="i" class="list-item-container">
           <person-list-item
@@ -37,7 +41,12 @@ import draggable from "vuedraggable";
 })
 export default class Table extends Vue {
   @Prop() public table!: any;
+  @Prop() public editable!: boolean;
   mounted(): void {}
+
+  canDrag(): Boolean {
+    return this.editable;
+  }
 }
 </script>
 

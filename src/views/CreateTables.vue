@@ -3,11 +3,11 @@
     <header class="header" @click="onClickHeader">
       <common-header></common-header>
     </header>
-    <label class="project-name">
+    <div class="project-name">
       <u>
         <b>{{this.getProjectName()}}</b>
       </u>
-    </label>
+    </div>
     <div class="project-setting">
       <div class="project-setting-row" v-if="editMode">
         <label>
@@ -50,7 +50,7 @@
               <p>
                 <b>参加メンバー （{{this.numberOfMembers}}人）</b>
               </p>
-              <b-field>
+              <b-field v-if="editMode">
                 <b-input width="200px" placeholder="名前を入力" v-model="personName"></b-input>
                 <b-button class="create-button" type="is-success" @click="onAdd">追加</b-button>
               </b-field>
@@ -58,7 +58,7 @@
                 <person-list-item
                   v-for="(person, i) in getPersons()"
                   :person="person"
-                  :showRemove="true"
+                  :showRemove="editMode"
                   :index="i"
                   :key="i"
                   class="person-list-container"
@@ -85,7 +85,9 @@
                 </b-field>
               </div>
               <div id="table-container" class="table-container">
-                <my-table v-for="(table, i) in tables" :table="table" :key="i" />
+                <my-table v-for="(table, i) in tables" 
+                  :table="table" :key="i"
+                  :editable="editMode" />
               </div>
             </div>
           </article>
